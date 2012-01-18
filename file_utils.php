@@ -121,7 +121,7 @@ FILE_LISTING_TABLE_HEAD;
 		$fileurl_display_text = wordwrap($file['filename'], 70, "<br />\n", true);
 
 		echo "<td><a href=\"$fileurl\" target=_BLANK>" . $fileurl_display_text . "</a>";
-		echo "<td>" . date("d-F-Y h:i:s A", filemtime($fullpath)) . "</td>";
+		echo "<td>" . date("M d, Y g:i A", filemtime($fullpath)) . "</td>";
 		echo "<td>" . filesize($fullpath) . "</td>";
 		// echo "<td>" . number_format(filesize($fullpath)) . "</td>";
 		echo "<td style=\"text-align:center\"><input type=\"checkbox\" name=\"${delete_files_var}\"  value=\"" . $file['filename'] . "\" />";

@@ -74,6 +74,7 @@
 			</div>
 		</div>
 		<div class="footer">
+			<a href="release.html" TARGET="release" onClick="window.open('', 'release', 'scrollbars=yes,resizable=yes,width=685,height=475') ">Release Notes</A>
 			<div>Recreational Coding by: <a href="http://TransWebTools.com" title="Terry Tompkins">Terry Tompkins</a> &copy; 2012</div>
 			<div>Revision: 17-January-2012</div>
 		</div>
