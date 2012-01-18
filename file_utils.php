@@ -1,6 +1,7 @@
 <!-- * (c) 2011, TransWeb Tools - Terry M. Tompkins - http://transwebtools.com
 	 * Licensed under Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
-	 * Revision: 16-August-2011
+	 * Revision: 17-January-2012:
+	 *           Added jQuery TableSorter functionality.  Requires jQuery and tablesorter js libraries.
 -->
 
 <?php
@@ -82,9 +83,37 @@ function show_uploaded_file_links($dir, $delete_files_var="files_to_delete") {
 	$result = process_dir($dir, FALSE);
 	if (count($result) < 1)
 		return;
+	$tablesorterInit = <<<TABLE_SORTER_JS
+		<script type="text/javascript" id="js">
+			$(document).ready(function() {
+				$.tablesorter.defaults.sortList = [[2,0]]; 
+				$("#fileListingTable").tablesorter({
+					headers: {
+						3: {
+							sorter: false
+						}
+					}
+				});
+			});
+		</script>
+TABLE_SORTER_JS;
 
-	echo "<table border=1>";
-	echo "<tr><th>Filename</th><th>Modify Date</th><th>File size</th><th><input type=\"submit\" value=\"Delete\" class=\"btn\"/></th></tr>";
+	$fileListingTableHead = <<<FILE_LISTING_TABLE_HEAD
+		<table id="fileListingTable" border="1" class="tablesorter">
+			<thead>
+				<tr>
+					<th>Filename</th>
+					<th>Modify Date</th>
+					<th class="{sorter: 'number'}">File size</th>
+					<th class="{sorter: false}" style="text-align: center;"><input type="submit" value="Delete" class="btn"/></th>
+				</tr>
+			</thead>
+			<tbody>
+FILE_LISTING_TABLE_HEAD;
+	
+	echo $tablesorterInit;
+	echo $fileListingTableHead;
+
 	foreach ($result as $file) {
 		echo "<tr>";
 		$fullpath = $file['dirpath'] . '/' . $file['filename'];
@@ -92,8 +121,9 @@ function show_uploaded_file_links($dir, $delete_files_var="files_to_delete") {
 		$fileurl_display_text = wordwrap($file['filename'], 70, "<br />\n", true);
 
 		echo "<td><a href=\"$fileurl\" target=_BLANK>" . $fileurl_display_text . "</a>";
-		echo "<td>" . date("d-F-Y H:i:s", filemtime($fullpath)) . "</td>";
-		echo "<td>" . number_format(filesize($fullpath)) . "</td>";
+		echo "<td>" . date("d-F-Y h:i:s A", filemtime($fullpath)) . "</td>";
+		echo "<td>" . filesize($fullpath) . "</td>";
+		// echo "<td>" . number_format(filesize($fullpath)) . "</td>";
 		echo "<td style=\"text-align:center\"><input type=\"checkbox\" name=\"${delete_files_var}\"  value=\"" . $file['filename'] . "\" />";
 
 		/* if it's a log file, dump contents
@@ -104,6 +134,7 @@ function show_uploaded_file_links($dir, $delete_files_var="files_to_delete") {
 		 */
 		echo "</tr>";
 	}
+	echo "</tbody>";
 	echo "</table>";
 }
 
